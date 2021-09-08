@@ -1,5 +1,6 @@
 package life.youshi.studynotes.entity;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -40,6 +41,18 @@ public class Article {
         this.contentText = contentText;
         this.createdAt = new Date();
         this.updatedAt = new Date();
+    }
+
+    public Article(Integer parentId, Integer sortCode, String path, String title, String contentMarkdown, String contentHtml, String contentText, Date createdAt, Date updatedAt) {
+        this.parentId = parentId;
+        this.sortCode = sortCode;
+        this.path = path;
+        this.title = title;
+        this.contentMarkdown = contentMarkdown;
+        this.contentHtml = contentHtml;
+        this.contentText = contentText;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public Article(Integer id, Integer parentId, Integer sortCode, String path, String title, String contentMarkdown, String contentHtml, String contentText, Date createdAt, Date updatedAt) {
@@ -137,12 +150,17 @@ public class Article {
 
     @Override
     public String toString() {
-        return "Article{" +
-            "id=" + id +
-            ", parentId=" + parentId +
-            ", sortCode=" + sortCode +
-            ", path='" + path + '\'' +
-            ", title='" + title + '\'' +
-            '}';
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(String.format("[文章编号]    %d\n", id));
+        stringBuilder.append(String.format("[父文章编号]  %d\n", parentId));
+        stringBuilder.append(String.format("[排序值]      %d\n", sortCode));
+        stringBuilder.append(String.format("[访问路径]    %s\n", path));
+        stringBuilder.append(String.format("[内容（Markdown格式）]\n%s\n", contentMarkdown));
+        stringBuilder.append(String.format("[内容（HTML格式）]\n%s\n", contentHtml));
+        stringBuilder.append(String.format("[内容（纯文本格式）]\n%s\n", contentText));
+        stringBuilder.append(String.format("[创建时间]    %s\n", dateFormat.format(createdAt)));
+        stringBuilder.append(String.format("[更新时间]    %s\n", dateFormat.format(updatedAt)));
+        return stringBuilder.toString();
     }
 }
