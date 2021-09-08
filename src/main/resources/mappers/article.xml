@@ -8,6 +8,11 @@
         SELECT * FROM articles WHERE id = #{value}
     </select>
 
+    <!--根据访问路径查询-->
+    <select id="selectByPath" parameterType="String" resultType="life.youshi.studynotes.entity.Article">
+        SELECT * FROM articles WHERE path = #{value}
+    </select>
+
     <!--插入-->
     <insert id="insert" parameterType="life.youshi.studynotes.entity.Article" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         INSERT INTO articles (parent_id, sort_code, path, title, content_markdown, content_html, content_text)

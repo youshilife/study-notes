@@ -26,6 +26,19 @@ public class ArticleMapper {
     }
 
     /**
+     * 根据访问路径获取文章
+     *
+     * @param path  访问路径
+     * @return      文章实例
+     */
+    public Article selectArticleByPath(String path) {
+        return (Article) MyBatisUtils.executeQuery(
+            sqlSession ->
+                sqlSession.selectOne(namespace + ".selectByPath", path)
+        );
+    }
+
+    /**
      * 插入文章
      *
      * @param article   文章实例

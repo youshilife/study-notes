@@ -50,6 +50,21 @@ public class ArticleMapperTest {
     }
 
     @Test
+    public void selectArticleByPath() {
+        try {
+            insertTestArticle();
+
+            Article article = articleMapper.selectArticleByPath(testArticle.getPath());
+
+            System.out.println(article);
+            Assert.assertNotNull(article);
+            Assert.assertEquals(testArticle.getId().intValue(), article.getId().intValue());
+        } finally {
+            deleteTestArticle();
+        }
+    }
+
+    @Test
     public void insertArticle() {
         try {
             boolean success = insertTestArticle();
