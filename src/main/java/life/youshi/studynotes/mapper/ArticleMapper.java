@@ -62,7 +62,7 @@ public class ArticleMapper {
     public boolean deleteArticleById(Integer id) {
         int rows = (int) MyBatisUtils.executeUpdate(
             sqlSession ->
-                sqlSession.delete(namespace + ".delete", id)
+                sqlSession.delete(namespace + ".deleteById", id)
         );
         return rows > 0;
     }
