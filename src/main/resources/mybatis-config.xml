@@ -18,4 +18,8 @@
             </dataSource>
         </environment>
     </environments>
+
+    <mappers>
+        <mapper resource="mappers/article.xml"/>
+    </mappers>
 </configuration>
