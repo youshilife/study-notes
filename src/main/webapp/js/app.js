@@ -1,68 +1,26 @@
 'use strict';
 
+// 后端主机
+const backendHost = '//localhost:8080'
+// API列表
+const apis = {
+    getArticle:    backendHost + '/api/article',
+    createArticle: backendHost + '/api/article/create',
+    updateArticle: backendHost + '/api/article/update',
+    resortArticle: backendHost + '/api/article/resort',
+    moveArticle:   backendHost + '/api/article/move',
+    deleteArticle: backendHost + '/api/article/delete',
+};
+
 let app = {
     data() {
         return {
             // 当前文章
-            article: {
-                id: 5,
-                path: '/计算机/编程语言/Java',
-                title: 'Java',
-                content: `
-## Java的历史
-
-变量\`name\`，**粗体**，*斜体*，<span style="color: red;">内嵌HTML</span>。
-
-\`\`\` java
-public static void main(String[] args) {
-    System.out.println("你好，world." + 5);
-}
-\`\`\`
-
-- 苹果
-- 梨
-- 香蕉
-`,
-            },
+            article: {},
             // 父文章
-            parent: {
-                id: 3,
-                path: '/计算机/编程语言',
-                title: '编程语言',
-            },
+            parent: {},
             // 子文章
-            children: [
-                {
-                    id: 12,
-                    path: '/计算机/编程语言/Java/数据类型',
-                    sortCode: 1,
-                    title: '数据类型',
-                },
-                {
-                    id: 12,
-                    path: '/计算机/编程语言/Java/变量',
-                    sortCode: 4,
-                    title: '变量',
-                },
-                {
-                    id: 12,
-                    path: '/计算机/编程语言/Java/控制结构',
-                    sortCode: 13,
-                    title: '控制结构',
-                },
-                {
-                    id: 12,
-                    path: '/计算机/编程语言/Java/输出与输入',
-                    sortCode: 14,
-                    title: '输出与输入',
-                },
-                {
-                    id: 12,
-                    path: '/计算机/编程语言/Java/代码风格',
-                    sortCode: 20,
-                    title: '代码风格',
-                },
-            ],
+            children: [],
 
             // 侧边栏是否显示
             isSidebarShown: false,
@@ -82,7 +40,7 @@ public static void main(String[] args) {
          * @returns {string}        HTML代码
          */
         renderMarkdown(markdown) {
-            return this.markdownRenderer.render(markdown);
+            return this.markdownRenderer.render(String(markdown));
         },
 
         /**
@@ -98,6 +56,54 @@ public static void main(String[] args) {
         hideSidebar() {
             this.isSidebarShown = false;
         },
+
+        /**
+         * 获取文章
+         */
+        getArticle() {
+            axios
+                .get(apis.getArticle, {
+                    params: {
+                        path: window.location.pathname,
+                    },
+                })
+                .then(response => {
+                    if (response.data.code === 0) {
+                        this.article = response.data.data.article;
+                        this.parent = response.data.data.parent;
+                        this.children = response.data.data.children;
+                    } else {
+                        alert(response.data.message);
+                    }
+                });
+        },
+
+        /**
+         * 创建文章
+         */
+        createArticle() {
+            let title = prompt("请输入文章标题：");
+            if (title === null) {
+                return;
+            }
+
+            let params = new URLSearchParams();
+            params.append("parent_id", this.article.id);
+            params.append("title", title);
+            axios
+                .post(apis.createArticle, params)
+                .then(response => {
+                    if (response.data.code === 0) {
+                        this.getArticle();
+                    } else {
+                        alert(response.data.message);
+                    }
+                });
+        },
+    },
+
+    mounted() {
+        this.getArticle();
     },
 };
 
