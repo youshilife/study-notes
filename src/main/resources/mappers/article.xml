@@ -13,6 +13,11 @@
         SELECT * FROM articles WHERE path = #{value}
     </select>
 
+    <!--根据父文章ID查询-->
+    <select id="selectByParentId" parameterType="Integer" resultType="life.youshi.studynotes.entity.Article">
+        SELECT * FROM articles WHERE parent_id = #{value}
+    </select>
+
     <!--插入-->
     <insert id="insert" parameterType="life.youshi.studynotes.entity.Article" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         INSERT INTO articles (parent_id, sort_code, path, title, content_markdown, content_html, content_text)
