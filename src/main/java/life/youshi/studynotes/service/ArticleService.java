@@ -3,6 +3,8 @@ package life.youshi.studynotes.service;
 import life.youshi.studynotes.entity.Article;
 import life.youshi.studynotes.mapper.ArticleMapper;
 
+import java.util.List;
+
 /**
  * [服务] 文章服务
  *
@@ -29,6 +31,27 @@ public class ArticleService {
      */
     public Article getArticleByPath(String path) {
         return articleMapper.selectArticleByPath(path);
+    }
+
+    /**
+     * 获取文章的父文章
+     *
+     * @param article   文章实例
+     * @return          父文章实例
+     *                  若不存在父文章则返回null
+     */
+    public Article getParentArticle(Article article) {
+        return getArticleById(article.getParentId());
+    }
+
+    /**
+     * 获取文章的子文章
+     *
+     * @param article   文章实例
+     * @return          子文章实例列表
+     */
+    public List<Article> getChildArticles(Article article) {
+        return articleMapper.selectArticlesByParentId(article.getId());
     }
 
     /**
