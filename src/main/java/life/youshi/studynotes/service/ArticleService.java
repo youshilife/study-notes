@@ -55,6 +55,20 @@ public class ArticleService {
     }
 
     /**
+     * 获取访问路径
+     *
+     * @param parentArticle 父文章实例
+     * @param title         标题
+     * @return              访问路径
+     */
+    public String getPath(Article parentArticle, String title) {
+        String path = parentArticle.getPath();
+        path = path.equals("/") ? path : path + "/";
+        path += title;
+        return path;
+    }
+
+    /**
      * 获取指定父文章中的下一个排序值
      *
      * @param parentArticle 父文章实例
