@@ -35,26 +35,31 @@ public static void main(String[] args) {
                 {
                     id: 12,
                     path: '/计算机/编程语言/Java/数据类型',
+                    sortCode: 1,
                     title: '数据类型',
                 },
                 {
                     id: 12,
                     path: '/计算机/编程语言/Java/变量',
+                    sortCode: 4,
                     title: '变量',
                 },
                 {
                     id: 12,
                     path: '/计算机/编程语言/Java/控制结构',
+                    sortCode: 13,
                     title: '控制结构',
                 },
                 {
                     id: 12,
                     path: '/计算机/编程语言/Java/输出与输入',
+                    sortCode: 14,
                     title: '输出与输入',
                 },
                 {
                     id: 12,
                     path: '/计算机/编程语言/Java/代码风格',
+                    sortCode: 20,
                     title: '代码风格',
                 },
             ],

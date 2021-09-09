@@ -35,9 +35,28 @@
                 <ul>
                     <li v-for="child in children">
                         <a :href="child.path">{{ child.title }}</a>
+
+                        <div class="operation">
+                            <span class="sort-code" title="排序值">{{ child.sortCode }}</span>
+                            <a title="修改排序值">
+                                <span class="fa fa-sort-amount-up"></span>
+                            </a>
+                            <a title="移动文章到指定分类">
+                                <span class="fa fa-sign-out-alt"></span>
+                            </a>
+                            <a title="删除文章">
+                                <span class="fa fa-trash"></span>
+                            </a>
+                        </div>
                     </li>
                 </ul>
             </nav>
+            <!--操作-->
+            <div class="operation">
+                <a class="create-article" title="创建新文章">
+                    <span class="fa fa-plus"></span>
+                </a>
+            </div>
         </aside>
 
         <!--主要内容-->
@@ -46,6 +65,11 @@
             <header>
                 <!--文章标题-->
                 <h1 class="title">{{ article.title }}</h1>
+                <div class="operation">
+                    <a title="编辑文章">
+                        <span class="fa fa-edit"></span>
+                    </a>
+                </div>
                 <!--显示侧边栏按钮-->
                 <button id="button-show-sidebar" class="button-sidebar-control" @click="showSidebar()">
                     <span class="fa fa-bars"></span>
