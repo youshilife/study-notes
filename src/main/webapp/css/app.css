@@ -98,6 +98,10 @@ html {
     padding: 15px;
 }
 
+#main > article ul {
+    padding-left: 15px;
+}
+
 @media (min-width: 769px) {
     .button-sidebar-control {
         display: none;
