@@ -15,7 +15,7 @@
 
     <!--根据父文章ID查询-->
     <select id="selectByParentId" parameterType="Integer" resultType="life.youshi.studynotes.entity.Article">
-        SELECT * FROM articles WHERE parent_id = #{value}
+        SELECT * FROM articles WHERE parent_id = #{value} ORDER BY sort_code ASC, id ASC
     </select>
 
     <!--插入-->

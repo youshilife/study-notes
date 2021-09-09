@@ -55,6 +55,22 @@ public class ArticleService {
     }
 
     /**
+     * 获取指定父文章中的下一个排序值
+     *
+     * @param parentArticle 父文章实例
+     * @return              排序值
+     *                      使用此排序值可使得文章排在最后
+     */
+    public int getNextSortCode(Article parentArticle) {
+        int sortCode = 0;
+        List<Article> children = getChildArticles(parentArticle);
+        if (children != null && children.size() > 0) {
+            sortCode = children.get(children.size() - 1).getSortCode() + 1;
+        }
+        return sortCode;
+    }
+
+    /**
      * 在数据库中创建新的文章数据
      *
      * @param article   文章实例
