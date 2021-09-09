@@ -38,7 +38,7 @@
 
                         <div class="operation">
                             <span class="sort-code" title="排序值">{{ child.sortCode }}</span>
-                            <a title="修改排序值">
+                            <a title="修改排序值" @click="resortArticle(child)">
                                 <span class="fa fa-sort-amount-up"></span>
                             </a>
                             <a title="移动文章到指定分类">

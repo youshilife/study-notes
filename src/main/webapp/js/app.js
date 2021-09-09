@@ -100,6 +100,31 @@ let app = {
                     }
                 });
         },
+
+        /**
+         * 重新排序文章
+         *
+         * @param child 要重设排序值的子文章
+         */
+        resortArticle(child) {
+            let sortCode = prompt(`文章《${child.title}》当前的排序值为${child.sortCode}，请输入新排序值：`);
+            if (sortCode === null) {
+                return;
+            }
+
+            let params = new URLSearchParams();
+            params.append("id", child.id);
+            params.append("sort_code", sortCode);
+            axios
+                .post(apis.resortArticle, params)
+                .then(response => {
+                    if (response.data.code === 0) {
+                        this.getArticle();
+                    } else {
+                        alert(response.data.message);
+                    }
+                });
+        },
     },
 
     mounted() {
