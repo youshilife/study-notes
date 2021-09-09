@@ -24,6 +24,8 @@ let app = {
 
             // 侧边栏是否显示
             isSidebarShown: false,
+            // 正在编辑
+            isEditing: false,
 
             // Markdown渲染器
             markdownRenderer: window.markdownit({
@@ -82,14 +84,14 @@ let app = {
          * 创建文章
          */
         createArticle() {
-            let title = prompt("请输入文章标题：");
+            let title = prompt('请输入文章标题：');
             if (title === null) {
                 return;
             }
 
             let params = new URLSearchParams();
-            params.append("parent_id", this.article.id);
-            params.append("title", title);
+            params.append('parent_id', this.article.id);
+            params.append('title', title);
             axios
                 .post(apis.createArticle, params)
                 .then(response => {
@@ -113,8 +115,8 @@ let app = {
             }
 
             let params = new URLSearchParams();
-            params.append("id", child.id);
-            params.append("sort_code", sortCode);
+            params.append('id', child.id);
+            params.append('sort_code', sortCode);
             axios
                 .post(apis.resortArticle, params)
                 .then(response => {
@@ -134,7 +136,7 @@ let app = {
         deleteArticle(child) {
             if (confirm(`是否确定删除文章《${child.title}》及其所有子文章？`)) {
                 let params = new URLSearchParams();
-                params.append("id", child.id);
+                params.append('id', child.id);
                 axios
                     .post(apis.deleteArticle, params)
                     .then(response => {
@@ -145,6 +147,41 @@ let app = {
                         }
                     });
             }
+        },
+
+        /**
+         * 编辑文章
+         */
+        editArticle() {
+            this.article.contentBackup = this.article.content;
+            this.isEditing = true;
+        },
+
+        /**
+         * 取消编辑文章
+         */
+        cancelEditArticle() {
+            this.isEditing = false;
+            this.article.content = this.article.contentBackup;
+        },
+
+        /**
+         * 更新文章内容
+         */
+        updateArticle() {
+            let params = new URLSearchParams();
+            params.append('id', this.article.id);
+            params.append('content', this.article.content);
+            axios
+                .post(apis.updateArticle, params)
+                .then(response => {
+                    if (response.data.code === 0) {
+                        this.isEditing = false;
+                        this.getArticle();
+                    } else {
+                        alert(response.data.message);
+                    }
+                });
         },
     },
 

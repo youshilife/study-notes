@@ -66,7 +66,7 @@
                 <!--文章标题-->
                 <h1 class="title">{{ article.title }}</h1>
                 <div class="operation">
-                    <a title="编辑文章">
+                    <a title="编辑文章" @click="editArticle()">
                         <span class="fa fa-edit"></span>
                     </a>
                 </div>
@@ -75,8 +75,14 @@
                     <span class="fa fa-bars"></span>
                 </button>
             </header>
+            <!--编辑文章-->
+            <form id="edit" v-if="isEditing">
+                <textarea v-model="article.content"></textarea>
+                <a class="button" @click="updateArticle()">保存</a>
+                <a class="button" @click="cancelEditArticle()">取消</a>
+            </form>
             <!--文章-->
-            <article v-html="renderMarkdown(article.content)">
+            <article v-if="!isEditing" v-html="renderMarkdown(article.content)">
             </article>
         </main>
     </div>

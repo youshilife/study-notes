@@ -45,6 +45,24 @@ a:hover {
     color: coral;
 }
 
+.button {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 2px;
+    margin-left: 5px;
+    background-color: #ccc;
+    text-decoration: none;
+}
+
+.button:hover {
+    background-color: #bbb;
+    text-decoration: none;
+}
+
+.button:first-of-type {
+    margin-left: 0;
+}
+
 /**
  * ====================================
  * 侧边栏
@@ -141,6 +159,16 @@ a:hover {
 
 #main > article ul {
     padding-left: 15px;
+}
+
+#main #edit {
+    padding: 15px;
+}
+
+#main #edit textarea {
+    width: 100%;
+    min-height: 300px;
+    font-family: monospace;
 }
 
 @media (min-width: 769px) {
