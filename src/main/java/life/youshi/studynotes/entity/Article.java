@@ -11,59 +11,56 @@ public class Article {
     private Integer id;
     // 父文章ID
     private Integer parentId;
-    // 排序值
-    private Integer sortCode;
     // 访问路径
+    // 根：/
+    // 非根：/XXX/YYY/ZZZ
     private String path;
+    // 排序值
+    private Integer sortCode = 0;
     // 标题
     private String title;
-    // 内容（Markdown格式）
-    private String contentMarkdown;
-    // 内容（HTML格式）
-    private String contentHtml;
-    // 内容（纯文本格式）
-    private String contentText;
+    // 内容（Markdown代码）
+    private String content = "";
     // 创建时间
-    private Date createdAt;
+    private Date createdAt = new Date();
     // 更新时间
-    private Date updatedAt;
+    private Date updatedAt = new Date();
 
     public Article() {
     }
 
-    public Article(Integer parentId, Integer sortCode, String path, String title, String contentMarkdown, String contentHtml, String contentText) {
+    public Article(Integer parentId, String path, Integer sortCode, String title) {
         this.parentId = parentId;
-        this.sortCode = sortCode;
         this.path = path;
+        this.sortCode = sortCode;
         this.title = title;
-        this.contentMarkdown = contentMarkdown;
-        this.contentHtml = contentHtml;
-        this.contentText = contentText;
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
     }
 
-    public Article(Integer parentId, Integer sortCode, String path, String title, String contentMarkdown, String contentHtml, String contentText, Date createdAt, Date updatedAt) {
+    public Article(Integer parentId, String path, Integer sortCode, String title, String content) {
         this.parentId = parentId;
-        this.sortCode = sortCode;
         this.path = path;
+        this.sortCode = sortCode;
         this.title = title;
-        this.contentMarkdown = contentMarkdown;
-        this.contentHtml = contentHtml;
-        this.contentText = contentText;
+        this.content = content;
+    }
+
+    public Article(Integer parentId, String path, Integer sortCode, String title, String content, Date createdAt, Date updatedAt) {
+        this.parentId = parentId;
+        this.path = path;
+        this.sortCode = sortCode;
+        this.title = title;
+        this.content = content;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public Article(Integer id, Integer parentId, Integer sortCode, String path, String title, String contentMarkdown, String contentHtml, String contentText, Date createdAt, Date updatedAt) {
+    public Article(Integer id, Integer parentId, String path, Integer sortCode, String title, String content, Date createdAt, Date updatedAt) {
         this.id = id;
         this.parentId = parentId;
-        this.sortCode = sortCode;
         this.path = path;
+        this.sortCode = sortCode;
         this.title = title;
-        this.contentMarkdown = contentMarkdown;
-        this.contentHtml = contentHtml;
-        this.contentText = contentText;
+        this.content = content;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -84,20 +81,20 @@ public class Article {
         this.parentId = parentId;
     }
 
-    public Integer getSortCode() {
-        return sortCode;
-    }
-
-    public void setSortCode(Integer sortCode) {
-        this.sortCode = sortCode;
-    }
-
     public String getPath() {
         return path;
     }
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public Integer getSortCode() {
+        return sortCode;
+    }
+
+    public void setSortCode(Integer sortCode) {
+        this.sortCode = sortCode;
     }
 
     public String getTitle() {
@@ -108,28 +105,12 @@ public class Article {
         this.title = title;
     }
 
-    public String getContentMarkdown() {
-        return contentMarkdown;
+    public String getContent() {
+        return content;
     }
 
-    public void setContentMarkdown(String contentMarkdown) {
-        this.contentMarkdown = contentMarkdown;
-    }
-
-    public String getContentHtml() {
-        return contentHtml;
-    }
-
-    public void setContentHtml(String contentHtml) {
-        this.contentHtml = contentHtml;
-    }
-
-    public String getContentText() {
-        return contentText;
-    }
-
-    public void setContentText(String contentText) {
-        this.contentText = contentText;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Date getCreatedAt() {
@@ -156,9 +137,7 @@ public class Article {
         stringBuilder.append(String.format("[父文章编号]  %d\n", parentId));
         stringBuilder.append(String.format("[排序值]      %d\n", sortCode));
         stringBuilder.append(String.format("[访问路径]    %s\n", path));
-        stringBuilder.append(String.format("[内容（Markdown格式）]\n%s\n", contentMarkdown));
-        stringBuilder.append(String.format("[内容（HTML格式）]\n%s\n", contentHtml));
-        stringBuilder.append(String.format("[内容（纯文本格式）]\n%s\n", contentText));
+        stringBuilder.append(String.format("[内容]\n%s\n", content));
         stringBuilder.append(String.format("[创建时间]    %s\n", dateFormat.format(createdAt)));
         stringBuilder.append(String.format("[更新时间]    %s\n", dateFormat.format(updatedAt)));
         return stringBuilder.toString();
