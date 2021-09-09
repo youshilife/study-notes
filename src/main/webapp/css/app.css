@@ -7,4 +7,110 @@
 html {
     font-family: '微软雅黑', 'Microsoft YaHei UI', '思源黑体', 'Source Han Sans SC', sans-serif;
     font-size: 16px;
+    line-height: 1.5;
+}
+
+/* 侧边栏控制按钮 */
+.button-sidebar-control {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    border: none;
+    margin: 15px;
+    background: none;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+    cursor: pointer;
+}
+
+/**
+ * ====================================
+ * 侧边栏
+ * ====================================
+ */
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    z-index: 99;
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+    background-color: #f0f0f0;
+    overflow-y: auto;
+}
+
+#sidebar.shown {
+    left: 0;
+}
+
+#sidebar .app-name {
+    color: #999;
+    font-size: 12px;
+}
+
+#sidebar .book-name {
+    margin: 15px 0 30px;
+    font-size: 18px;
+    text-align: center;
+}
+
+#sidebar ul {
+    list-style: none;
+}
+
+#sidebar .position {
+    margin-bottom: 30px;
+}
+
+/**
+ * ====================================
+ * 主要内容
+ * ====================================
+ */
+
+#main {
+    padding-top: 60px;
+}
+
+#main > header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    padding: 15px;
+    border-bottom: 1px solid #ccc;
+    background-color: #fff;
+    line-height: 30px;
+}
+
+#main > header .title {
+    font-size: 20px;
+}
+
+#main > article {
+    padding: 15px;
+}
+
+@media (min-width: 769px) {
+    .button-sidebar-control {
+        display: none;
+    }
+
+    #sidebar {
+        width: 300px;
+        left: 0;
+        border-right: 1px solid #ccc;
+    }
+
+    #main, #main > header {
+        width: calc(100% - 300px);
+        margin-left: 300px;
+    }
 }

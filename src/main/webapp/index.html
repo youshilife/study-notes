@@ -4,12 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>学习笔记</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
     <!--侧边栏-->
     <aside id="sidebar">
-        <h2 class="title">学习笔记</h2>
+        <!--应用名称-->
+        <p class="app-name">学习笔记</p>
+        <!--隐藏侧边栏按钮-->
+        <button id="button-hide-sidebar" class="button-sidebar-control">
+            <span class="fa fa-times"></span>
+        </button>
+        <!--笔记本名称-->
+        <h2 class="book-name">Java</h2>
         <!--位置指示-->
         <nav class="position">
             <ul>
@@ -41,18 +49,34 @@
                 </li>
             </ul>
         </nav>
+
+        <script>
+            for (let i = 1; i < 50; i++) {
+                document.writeln(`${i}<br>`);
+            }
+        </script>
     </aside>
 
     <!--主要内容-->
     <main id="main">
         <!--头部-->
         <header>
-            <h1>Java</h1>
+            <!--文章标题-->
+            <h1 class="title">Java</h1>
+            <!--显示侧边栏按钮-->
+            <button id="button-show-sidebar" class="button-sidebar-control">
+                <span class="fa fa-bars"></span>
+            </button>
         </header>
         <!--文章-->
         <article>
             <h1>Java</h1>
             <p>Java是一门非常流行的编程语言。</p>
+            <script>
+                for (let i = 1; i <= 200; i++) {
+                    document.writeln(`${i}<br>`);
+                }
+            </script>
         </article>
     </main>
 
