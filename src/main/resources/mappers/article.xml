@@ -20,8 +20,8 @@
 
     <!--插入-->
     <insert id="insert" parameterType="life.youshi.studynotes.entity.Article" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        INSERT INTO articles (parent_id, sort_code, path, title, content_markdown, content_html, content_text)
-        VALUES (#{parentId}, #{sortCode}, #{path}, #{title}, #{contentMarkdown}, #{contentHtml},#{contentText})
+        INSERT INTO articles (parent_id, path, sort_code, title, content)
+        VALUES (#{parentId}, #{path}, #{sortCode}, #{title}, #{content})
     </insert>
 
     <!--更新-->
@@ -29,12 +29,10 @@
         UPDATE articles
         SET
             parent_id = #{parentId},
-            sort_code = #{sortCode},
             path = #{path},
+            sort_code = #{sortCode},
             title = #{title},
-            content_markdown = #{contentMarkdown},
-            content_html = #{contentHtml},
-            content_text = #{contentText},
+            content = #{content},
             updated_at = NOW()
         WHERE id = #{id}
     </update>
