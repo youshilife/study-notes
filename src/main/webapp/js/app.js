@@ -125,6 +125,27 @@ let app = {
                     }
                 });
         },
+
+        /**
+         * 删除文章
+         *
+         * @param child 要删除的子文章
+         */
+        deleteArticle(child) {
+            if (confirm(`是否确定删除文章《${child.title}》及其所有子文章？`)) {
+                let params = new URLSearchParams();
+                params.append("id", child.id);
+                axios
+                    .post(apis.deleteArticle, params)
+                    .then(response => {
+                        if (response.data.code === 0) {
+                            this.getArticle();
+                        } else {
+                            alert(response.data.message);
+                        }
+                    });
+            }
+        },
     },
 
     mounted() {
