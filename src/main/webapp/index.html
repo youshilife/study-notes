@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习笔记</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.2.0/build/styles/default.min.css">
+
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+    <div id="app">
+        <div @click="linkClicked($event)">
+            <!--侧边栏-->
+            <aside id="sidebar" :class="{shown: isSidebarShown}">
+                <!--应用名称-->
+                <p class="app-name">学习笔记</p>
+                <!--隐藏侧边栏按钮-->
+                <button id="button-hide-sidebar" class="button-sidebar-control" @click="hideSidebar()">
+                    <span class="fa fa-times"></span>
+                </button>
+                <!--笔记本名称-->
+                <h2 class="book-name">{{ article.title }}</h2>
+                <!--位置指示-->
+                <nav class="position">
+                    <ul>
+                        <li v-if="article.path !== '/'">
+                            当前文章：<a :href="article.path">{{ article.path }}</a>
+                        </li>
+                        <li v-if="parent">
+                            上级文章：<a :href="parent.path">{{ parent.path }}</a>
+                        </li>
+                    </ul>
+                </nav>
+                <!--子文章导航-->
+                <nav class="articles">
+                    <ul>
+                        <li v-for="child in children">
+                            <a :href="child.path">{{ child.title }}</a>
+
+                            <div class="operation">
+                                <span class="sort-code" title="排序值">{{ child.sortCode }}</span>
+                                <a title="修改排序值" @click="resortArticle(child)">
+                                    <span class="fa fa-sort-amount-up-alt"></span>
+                                </a>
+                                <a title="移动文章到指定分类">
+                                    <span class="fa fa-sign-out-alt"></span>
+                                </a>
+                                <a title="删除文章" @click="deleteArticle(child)">
+                                    <span class="fa fa-trash"></span>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!--操作-->
+                <div class="operation">
+                    <a class="create-article" title="创建新文章" @click="createArticle()">
+                        <span class="fa fa-plus"></span>
+                    </a>
+                </div>
+            </aside>
+
+            <!--主要内容-->
+            <main id="main">
+                <!--头部-->
+                <header>
+                    <!--文章标题-->
+                    <h1 class="title">{{ article.title }}</h1>
+                    <div class="operation">
+                        <a title="刷新" @click="init()">
+                            <span class="fa fa-sync"></span>
+                        </a>
+                        <a title="编辑文章" @click="editArticle()">
+                            <span class="fa fa-pen"></span>
+                        </a>
+                        <a v-if="isLocalEditorAvailable" title="在本地编辑器中编辑" @click="editArticleInLocalEditor()">
+                            <span class="fa fa-cloud-upload-alt"></span>
+                        </a>
+                    </div>
+                    <!--显示侧边栏按钮-->
+                    <button id="button-show-sidebar" class="button-sidebar-control" @click="showSidebar()">
+                        <span class="fa fa-bars"></span>
+                    </button>
+                </header>
+                <!--编辑文章-->
+                <form id="edit" v-if="isEditing">
+                    <div>
+                        <label for="edit-field-title">文章标题</label>
+                        <input id="edit-field-title" class="form-control" v-model="article.titleEditing" type="text" required placeholder="文章标题">
+                    </div>
+                    <div>
+                        <label for="edit-field-content">文章内容</label>
+                        <textarea id="edit-field-content" class="form-control" v-model="article.contentEditing" placeholder="文章内容，可使用Markdown/HTML/纯文本格式书写"></textarea>
+                    </div>
+                    <div>
+                        <a class="button" @click="updateArticleContent()">保存</a>
+                        <a class="button" @click="cancelEditArticle()">取消</a>
+                    </div>
+                </form>
+                <!--文章-->
+                <article v-if="!isEditing" v-html="renderMarkdown(article.content)">
+                </article>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@12.2.0/dist/markdown-it.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.21.4/dist/axios.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.2.0/build/highlight.min.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>
