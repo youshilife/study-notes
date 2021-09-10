@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>学习笔记</title>
     <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.2.0/build/styles/default.min.css">
+
     <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
@@ -40,7 +42,7 @@
                             <div class="operation">
                                 <span class="sort-code" title="排序值">{{ child.sortCode }}</span>
                                 <a title="修改排序值" @click="resortArticle(child)">
-                                    <span class="fa fa-sort-amount-up"></span>
+                                    <span class="fa fa-sort-amount-up-alt"></span>
                                 </a>
                                 <a title="移动文章到指定分类">
                                     <span class="fa fa-sign-out-alt"></span>
@@ -67,8 +69,14 @@
                     <!--文章标题-->
                     <h1 class="title">{{ article.title }}</h1>
                     <div class="operation">
+                        <a title="刷新" @click="init()">
+                            <span class="fa fa-sync"></span>
+                        </a>
                         <a title="编辑文章" @click="editArticle()">
-                            <span class="fa fa-edit"></span>
+                            <span class="fa fa-pen"></span>
+                        </a>
+                        <a v-if="isLocalEditorAvailable" title="在本地编辑器中编辑" @click="editArticleInLocalEditor()">
+                            <span class="fa fa-cloud-upload-alt"></span>
                         </a>
                     </div>
                     <!--显示侧边栏按钮-->
@@ -101,6 +109,7 @@
     <script src="https://unpkg.com/vue@next"></script>
     <script src="https://cdn.jsdelivr.net/npm/markdown-it@12.2.0/dist/markdown-it.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@0.21.4/dist/axios.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.2.0/build/highlight.min.js"></script>
     <script src="/js/app.js"></script>
 </body>
 </html>

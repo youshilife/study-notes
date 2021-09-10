@@ -24,10 +24,21 @@ const APP = {
             isSidebarShown: false,
             // 正在编辑
             isEditing: false,
+            // 本地编辑器是否可用
+            isLocalEditorAvailable: false,
 
             // Markdown渲染器
             markdownRenderer: window.markdownit({
                 html: true,
+                // 代码高亮
+                highlight: function (str, lang) {
+                    if (lang && window.hljs.getLanguage(lang)) {
+                        try {
+                            return window.hljs.highlight(str, { language: lang }).value;
+                        } catch (__) {}
+                    }
+                    return '';
+                }
             }),
         };
     },
@@ -99,7 +110,7 @@ const APP = {
             axios
                 .post(APIS.createArticle, params)
                 .then(response => {
-                    this.getArticle();
+                    this.init();
                 })
                 .catch(error => {
                     if (error.response) {
@@ -134,7 +145,7 @@ const APP = {
             axios
                 .post(APIS.updateArticle, params)
                 .then(response => {
-                    this.getArticle();
+                    this.init();
                 })
                 .catch(error => {
                     if (error.response) {
@@ -155,7 +166,7 @@ const APP = {
                 axios
                     .post(APIS.deleteArticle, params)
                     .then(response => {
-                        this.getArticle();
+                        this.init();
                     })
                     .catch(error => {
                         if (error.response) {
@@ -199,8 +210,7 @@ const APP = {
                 .then(response => {
                     let newPath = this.article.path.replace(new RegExp(`${this.article.title}$`), this.article.titleEditing);
                     window.history.replaceState(null, null, newPath);
-                    this.getArticle();
-                    this.isEditing = false;
+                    this.init();
                 })
                 .catch(error => {
                     if (error.response) {
@@ -224,18 +234,54 @@ const APP = {
                 // 如果是文章链接，则不刷新页面，而是重新获取数据
                 if (href && href.match(/^\/(.*?\/?)*/)) {
                     window.history.pushState(null, null, href);
-                    this.cancelEditArticle();
-                    this.getArticle();
+                    this.init();
                     event.preventDefault();
                 }
             }
         },
+
+        /**
+         * 检查本地编辑器是否可用
+         */
+        checkLocalEditor() {
+            axios
+                .get('http://localhost:5000/ping')
+                .then(response => {
+                    this.isLocalEditorAvailable = true;
+                })
+                .catch(error => {
+                    this.isLocalEditorAvailable = false;
+                });
+        },
+
+        /**
+         * 在本地编辑器中编辑文章
+         */
+        editArticleInLocalEditor() {
+            axios
+                .get('http://localhost:5000/edit/' + this.article.id)
+                .then(response => {
+
+                })
+                .catch(error => {
+
+                });
+        },
+
+        /**
+         * 初始化
+         */
+        init() {
+            this.isEditing = false;
+            this.getArticle();
+            this.checkLocalEditor();
+        },
     },
 
     mounted() {
-        this.getArticle();
+        this.init();
         window.addEventListener('popstate', () => {
-            this.getArticle();
+            this.init();
         });
     },
 };
