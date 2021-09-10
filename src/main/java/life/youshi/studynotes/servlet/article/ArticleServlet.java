@@ -2,13 +2,18 @@ package life.youshi.studynotes.servlet.article;
 
 import life.youshi.studynotes.entity.Article;
 import life.youshi.studynotes.service.ArticleService;
+import life.youshi.studynotes.util.JsonResponseUtils;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * [Servlet] 文章管理
@@ -127,6 +132,38 @@ public abstract class ArticleServlet extends HttpServlet {
     }
 
     /**
+     * 检查请求中的文章访问路径
+     *
+     * 访问路径合法条件：
+     * - 参数存在且为非空字符串
+     * - 对应的文章存在
+     *
+     * @param request   请求
+     * @param paramKey  参数键名
+     * @return          访问路径对应的文章实例
+     * @throws NotFoundException    文章不存在时抛出
+     * @throws BadRequestException  其他异常时抛出
+     */
+    protected Article checkPath(HttpServletRequest request, String paramKey) {
+        try {
+            String path = checkStringNonEmpty(request, paramKey);
+            path = URLDecoder.decode(path, request.getCharacterEncoding());
+            if (path.endsWith("/") && !path.equals("/")) {
+                path = path.substring(0, path.length() - 1);
+            }
+            Article article = articleService.getArticleByPath(path);
+            Objects.requireNonNull(article);
+            return article;
+        } catch (NullPointerException e) {
+            throw new NotFoundException();
+        } catch (BadRequestException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BadRequestException();
+        }
+    }
+
+    /**
      * 检查请求中的文章标题
      *
      * 标题合法条件：
@@ -187,5 +224,30 @@ public abstract class ArticleServlet extends HttpServlet {
         } catch (Exception e) {
             throw new BadRequestException();
         }
+    }
+
+    /**
+     * 处理请求
+     *
+     * @param response  响应
+     * @param function  处理函数，返回JSON结果
+     */
+    protected void handle(HttpServletResponse response, Supplier<JsonResponseUtils> function) throws IOException {
+        JsonResponseUtils result;
+
+        try {
+            result = function.get();
+        } catch (BadRequestException e) {
+            response.setStatus(400);
+            result = new JsonResponseUtils(400, "请求格式错误！");
+        } catch (NotFoundException e) {
+            response.setStatus(404);
+            result = new JsonResponseUtils(404, "资源不存在！");
+        } catch (Exception e) {
+            response.setStatus(500);
+            result = new JsonResponseUtils(500, "服务器错误！");
+        }
+
+        response.getWriter().println(result.toJson());
     }
 }
