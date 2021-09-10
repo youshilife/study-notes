@@ -23,6 +23,8 @@ public abstract class ArticleServlet extends HttpServlet {
 
     // 不正确的请求格式异常
     protected static class BadRequestException extends RuntimeException {}
+    // 禁止操作异常
+    protected static class ForbiddenException extends RuntimeException {}
     // 未找到资源异常
     protected static class NotFoundException extends RuntimeException {}
     // 标题冲突异常
@@ -240,6 +242,9 @@ public abstract class ArticleServlet extends HttpServlet {
         } catch (BadRequestException e) {
             response.setStatus(400);
             result = new JsonResponseUtils(400, "请求格式错误！");
+        } catch (ForbiddenException e) {
+            response.setStatus(403);
+            result = new JsonResponseUtils(403, "不允许的操作！");
         } catch (NotFoundException e) {
             response.setStatus(404);
             result = new JsonResponseUtils(404, "资源不存在！");
