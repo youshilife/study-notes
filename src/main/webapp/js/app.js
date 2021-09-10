@@ -93,10 +93,15 @@ const APP = {
             axios
                 .post(APIS.createArticle, params)
                 .then(response => {
-                    if (response.data.code === 0) {
-                        this.getArticle();
-                    } else {
-                        alert(response.data.message);
+                    this.getArticle();
+                })
+                .catch(error => {
+                    if (error.response) {
+                        if (error.response.data.message.indexOf('标题冲突') >= 0) {
+                            alert(`指定的标题"${title}"在当前分类中已存在，请重新指定标题！`);
+                        } else {
+                            alert(error.response.data.message);
+                        }
                     }
                 });
         },
