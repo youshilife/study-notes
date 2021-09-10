@@ -87,6 +87,11 @@ const APP = {
             if (title === null) {
                 return;
             }
+            title = title.trim();
+            if (title === '') {
+                alert('标题不能为空！');
+                return;
+            }
 
             let params = new URLSearchParams();
             params.append('parent_id', this.article.id);
@@ -115,6 +120,11 @@ const APP = {
         resortArticle(article) {
             let sortCode = prompt(`文章《${article.title}》当前的排序值为${article.sortCode}，请输入新排序值：`);
             if (sortCode === null) {
+                return;
+            }
+            sortCode = Number(sortCode);
+            if (isNaN(sortCode) || Math.floor(sortCode) !== sortCode) {
+                alert('排序值必须是一个整数！');
                 return;
             }
 
