@@ -70,6 +70,9 @@
                         <a title="编辑文章" @click="editArticle()">
                             <span class="fa fa-edit"></span>
                         </a>
+                        <a v-if="isLocalEditorAvailable" title="在本地编辑器中编辑" @click="editArticleInLocalEditor()">
+                            <span class="fa fa-cloud-upload-alt"></span>
+                        </a>
                     </div>
                     <!--显示侧边栏按钮-->
                     <button id="button-show-sidebar" class="button-sidebar-control" @click="showSidebar()">

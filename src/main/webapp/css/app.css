@@ -157,6 +157,10 @@ input, textarea, button {
     margin-left: 10px;
 }
 
+#main > header .operation a {
+    margin-right: 5px;
+}
+
 #main > article {
     padding: 15px;
 }

@@ -24,6 +24,8 @@ const APP = {
             isSidebarShown: false,
             // 正在编辑
             isEditing: false,
+            // 本地编辑器是否可用
+            isLocalEditorAvailable: false,
 
             // Markdown渲染器
             markdownRenderer: window.markdownit({
@@ -230,10 +232,39 @@ const APP = {
                 }
             }
         },
+
+        /**
+         * 检查本地编辑器是否可用
+         */
+        checkLocalEditor() {
+            axios
+                .get('http://localhost:5000/ping')
+                .then(response => {
+                    this.isLocalEditorAvailable = true;
+                })
+                .catch(error => {
+
+                });
+        },
+
+        /**
+         * 在本地编辑器中编辑文章
+         */
+        editArticleInLocalEditor() {
+            axios
+                .get('http://localhost:5000/edit/' + this.article.id)
+                .then(response => {
+
+                })
+                .catch(error => {
+
+                });
+        },
     },
 
     mounted() {
         this.getArticle();
+        this.checkLocalEditor();
         window.addEventListener('popstate', () => {
             this.getArticle();
         });
