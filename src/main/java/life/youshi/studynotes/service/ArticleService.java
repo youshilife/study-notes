@@ -3,6 +3,8 @@ package life.youshi.studynotes.service;
 import life.youshi.studynotes.entity.Article;
 import life.youshi.studynotes.mapper.ArticleMapper;
 
+import java.util.List;
+
 /**
  * [服务] 文章服务
  *
@@ -29,6 +31,57 @@ public class ArticleService {
      */
     public Article getArticleByPath(String path) {
         return articleMapper.selectArticleByPath(path);
+    }
+
+    /**
+     * 获取文章的父文章
+     *
+     * @param article   文章实例
+     * @return          父文章实例
+     *                  若不存在父文章则返回null
+     */
+    public Article getParentArticle(Article article) {
+        return getArticleById(article.getParentId());
+    }
+
+    /**
+     * 获取文章的子文章
+     *
+     * @param article   文章实例
+     * @return          子文章实例列表
+     */
+    public List<Article> getChildArticles(Article article) {
+        return articleMapper.selectArticlesByParentId(article.getId());
+    }
+
+    /**
+     * 获取访问路径
+     *
+     * @param parentArticle 父文章实例
+     * @param title         标题
+     * @return              访问路径
+     */
+    public String getPath(Article parentArticle, String title) {
+        String path = parentArticle.getPath();
+        path = path.equals("/") ? path : path + "/";
+        path += title;
+        return path;
+    }
+
+    /**
+     * 获取指定父文章中的下一个排序值
+     *
+     * @param parentArticle 父文章实例
+     * @return              排序值
+     *                      使用此排序值可使得文章排在最后
+     */
+    public int getNextSortCode(Article parentArticle) {
+        int sortCode = 0;
+        List<Article> children = getChildArticles(parentArticle);
+        if (children != null && children.size() > 0) {
+            sortCode = children.get(children.size() - 1).getSortCode() + 1;
+        }
+        return sortCode;
     }
 
     /**

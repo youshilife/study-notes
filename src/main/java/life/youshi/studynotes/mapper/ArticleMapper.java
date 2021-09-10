@@ -3,6 +3,8 @@ package life.youshi.studynotes.mapper;
 import life.youshi.studynotes.entity.Article;
 import life.youshi.studynotes.util.MyBatisUtils;
 
+import java.util.List;
+
 /**
  * [数据库映射器] 文章
  *
@@ -13,7 +15,7 @@ public class ArticleMapper {
     private static final String namespace = ArticleMapper.class.getName();
 
     /**
-     * 根据ID获取文章
+     * 根据文章ID查询文章
      *
      * @param id    文章ID
      * @return      文章实例
@@ -26,7 +28,7 @@ public class ArticleMapper {
     }
 
     /**
-     * 根据访问路径获取文章
+     * 根据访问路径查询文章
      *
      * @param path  访问路径
      * @return      文章实例
@@ -35,6 +37,19 @@ public class ArticleMapper {
         return (Article) MyBatisUtils.executeQuery(
             sqlSession ->
                 sqlSession.selectOne(namespace + ".selectByPath", path)
+        );
+    }
+
+    /**
+     * 根据父文章ID查询文章
+     *
+     * @param parentId  父文章ID
+     * @return          文章列表
+     */
+    public List<Article> selectArticlesByParentId(Integer parentId) {
+        return (List<Article>) MyBatisUtils.executeQuery(
+            sqlSession ->
+                sqlSession.selectList(namespace + ".selectByParentId", parentId)
         );
     }
 

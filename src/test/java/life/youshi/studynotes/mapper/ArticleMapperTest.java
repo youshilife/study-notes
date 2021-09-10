@@ -8,12 +8,10 @@ public class ArticleMapperTest {
     private static final ArticleMapper articleMapper = new ArticleMapper();
     private final Article testArticle = new Article(
         null,
+        "/计算机/编程语言/Java",
         0,
-        "/计算机/",
-        "计算机",
-        "计算机内容（Markdown）",
-        "计算机内容（HTML）",
-        "计算机内容（纯文本）"
+        "Java",
+        "Java文章内容"
     );
 
     /**
@@ -81,15 +79,15 @@ public class ArticleMapperTest {
         try {
             insertTestArticle();
 
-            testArticle.setPath("/数学/");
-            testArticle.setTitle("新标题");
+            testArticle.setPath("/数学/线性代数");
+            testArticle.setTitle("线性代数");
 
             boolean success = articleMapper.updateArticle(testArticle);
             Article article = articleMapper.selectArticleById(testArticle.getId());
 
             Assert.assertTrue(success);
-            Assert.assertEquals("/数学/", article.getPath());
-            Assert.assertEquals("新标题", article.getTitle());
+            Assert.assertEquals("/数学/线性代数", article.getPath());
+            Assert.assertEquals("线性代数", article.getTitle());
         } finally {
             deleteTestArticle();
         }
