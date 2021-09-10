@@ -19,6 +19,10 @@ a:hover {
     text-decoration: underline;
 }
 
+input, textarea, button {
+    outline: none;
+}
+
 /* 侧边栏控制按钮 */
 .button-sidebar-control {
     display: block;
@@ -165,8 +169,27 @@ a:hover {
     padding: 15px;
 }
 
-#main #edit textarea {
+#main #edit label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#main #edit .form-control {
     width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+    border-radius: 2px;
+    font-size: 14px;
+}
+
+#main #edit .form-control:focus {
+    border-color: coral;
+}
+
+#main #edit textarea {
     min-height: 300px;
     font-family: monospace;
 }

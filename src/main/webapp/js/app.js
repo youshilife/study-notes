@@ -169,7 +169,8 @@ const APP = {
          * 编辑文章
          */
         editArticle() {
-            this.article.contentBackup = this.article.content;
+            this.article.titleEditing = this.article.title;
+            this.article.contentEditing = this.article.content;
             this.isEditing = true;
         },
 
@@ -178,25 +179,36 @@ const APP = {
          */
         cancelEditArticle() {
             this.isEditing = false;
-            this.article.content = this.article.contentBackup;
         },
 
         /**
          * 更新文章内容
          */
         updateArticleContent() {
+            if (this.article.titleEditing === '') {
+                alert('标题不能为空！');
+                return;
+            }
+
             let params = new URLSearchParams();
             params.append('id',      this.article.id);
-            params.append('content', this.article.content);
+            params.append('title',   this.article.titleEditing);
+            params.append('content', this.article.contentEditing);
             axios
                 .post(APIS.updateArticle, params)
                 .then(response => {
-                    this.isEditing = false;
+                    let newPath = this.article.path.replace(new RegExp(`${this.article.title}$`), this.article.titleEditing);
+                    window.history.replaceState(null, null, newPath);
                     this.getArticle();
+                    this.isEditing = false;
                 })
                 .catch(error => {
                     if (error.response) {
-                        alert(error.response.data.message);
+                        if (error.response.data.message.indexOf('标题冲突') >= 0) {
+                            alert(`指定的标题"${this.article.titleEditing}"在当前文章所属分类中已存在，请重新指定标题！`);
+                        } else {
+                            alert(error.response.data.message);
+                        }
                     }
                 });
         },
@@ -210,8 +222,9 @@ const APP = {
             if (event.target.nodeName.toLowerCase() === 'a') {
                 let href = event.target.getAttribute('href');
                 // 如果是文章链接，则不刷新页面，而是重新获取数据
-                if (href.match(/^\/(.*?\/?)*/)) {
+                if (href && href.match(/^\/(.*?\/?)*/)) {
                     window.history.pushState(null, null, href);
+                    this.cancelEditArticle();
                     this.getArticle();
                     event.preventDefault();
                 }
@@ -221,6 +234,9 @@ const APP = {
 
     mounted() {
         this.getArticle();
+        window.addEventListener('popstate', () => {
+            this.getArticle();
+        });
     },
 };
 

@@ -78,9 +78,18 @@
                 </header>
                 <!--编辑文章-->
                 <form id="edit" v-if="isEditing">
-                    <textarea v-model="article.content"></textarea>
-                    <a class="button" @click="updateArticleContent()">保存</a>
-                    <a class="button" @click="cancelEditArticle()">取消</a>
+                    <div>
+                        <label for="edit-field-title">文章标题</label>
+                        <input id="edit-field-title" class="form-control" v-model="article.titleEditing" type="text" required placeholder="文章标题">
+                    </div>
+                    <div>
+                        <label for="edit-field-content">文章内容</label>
+                        <textarea id="edit-field-content" class="form-control" v-model="article.contentEditing" placeholder="文章内容，可使用Markdown/HTML/纯文本格式书写"></textarea>
+                    </div>
+                    <div>
+                        <a class="button" @click="updateArticleContent()">保存</a>
+                        <a class="button" @click="cancelEditArticle()">取消</a>
+                    </div>
                 </form>
                 <!--文章-->
                 <article v-if="!isEditing" v-html="renderMarkdown(article.content)">
