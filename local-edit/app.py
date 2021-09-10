@@ -12,13 +12,13 @@
 
 
 import os
-import time
+import atexit
 import tempfile
 import subprocess
 import requests
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
-
+from flask import Flask, jsonify
 
 # =====================================
 # 数据定义
@@ -35,10 +35,16 @@ APIS = {
 # 编辑器命令
 EDITOR = "C:\\Program Files\\Typora\\Typora.exe"
 
+# 受编辑的文章
+# 映射：文件保存路径 → 文章数据(dict)
+articles = {}
+
 # 临时目录
 temp_dir = None
 # 文件监视器
 file_watcher = None
+# Flask应用程序
+flask_app = Flask(__name__)
 
 
 # =====================================
@@ -95,7 +101,7 @@ def save_article(article):
     global temp_dir
     dir_path = temp_dir.name + os.sep + str(article["id"])
     file_path = dir_path + os.sep + article["title"] + ".md"
-    os.mkdir(dir_path)
+    os.makedirs(dir_path, exist_ok=True)
     with open(file_path, "w", encoding="UTF-8") as file:
         file.write(article["content"])
     article["filePath"] = file_path
@@ -123,9 +129,12 @@ def on_file_modified(event):
     """文件修改事假处理函数
     :param event    事件
     """
-    load_article(article)
-    update_article(article)
-    print(event.src_path + " 被修改，已自动更新")
+    global articles
+    if event.src_path in articles:
+        article = articles[event.src_path]
+        load_article(article)
+        update_article(article)
+        print(f"自动更新文章《{article['title']}》(ID: {article['id']})")
 
 
 def open_file_watcher():
@@ -169,6 +178,42 @@ def close_file_watcher():
     file_watcher.stop()
     file_watcher.join()
 
+@flask_app.route("/ping")
+def ping():
+    """[Web控制器] 测试连通性"""
+    return jsonify("pong")
+
+
+@flask_app.route("/edit/<id>")
+def edit(id):
+    global articles
+
+    status_code = 200
+    result = {
+        "code": 0,
+        "message": "OK",
+    }
+
+    article = get_article(id)
+    if article:
+        save_article(article)
+        articles[article["filePath"]] = article
+        open_article_in_editor(article)
+    else:
+        status_code = 404
+        result["code"] = 1
+        result["message"] = "未能获取到指定文章，无法编辑！"
+
+    return result, status_code
+
+
+@atexit.register
+def clean():
+    """清理环境，在退出时调用"""
+    close_file_watcher()
+    close_temp_dir()
+    print("程序已退出")
+
 
 # =====================================
 # 执行
@@ -177,16 +222,3 @@ def close_file_watcher():
 
 open_temp_dir()
 open_file_watcher()
-
-article = get_article(17)
-save_article(article)
-open_article_in_editor(article)
-
-try:
-    while True:
-        time.sleep(1)
-except KeyboardInterrupt:
-    pass
-
-close_file_watcher()
-close_temp_dir()
