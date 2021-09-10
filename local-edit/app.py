@@ -11,6 +11,7 @@
 #
 
 
+import os
 import tempfile
 import requests
 
@@ -78,14 +79,39 @@ def update_article(article):
     return response.status_code == 200
 
 
+def save_article(article):
+    """保存文章数据到文件
+    :param article  文章数据（dict）
+                    保存的文件路径会以"filePath"键设置在文章数据中
+    """
+    global temp_dir
+    dir_path = temp_dir.name + os.sep + str(article["id"])
+    file_path = dir_path + os.sep + article["title"] + ".md"
+    os.mkdir(dir_path)
+    with open(file_path, "w") as file:
+        file.write(article["content"])
+    article["filePath"] = file_path
+    print(f"文章《{article['title']}》(ID: {article['id']})已保存到 {file_path}")
+
+
+def load_article(article):
+    """从文件中载入文章数据
+    :param article  文章数据（dict）（已包含"filePath"键）
+    """
+    with open(article["filePath"], "r") as file:
+        article["content"] = file.read()
+
+
 # =====================================
 # 执行
 # =====================================
 
+
 open_temp_dir()
 
 article = get_article(17)
-article["content"] += "[新内容]"
+save_article(article)
+load_article(article)
 update_article(article)
 
 close_temp_dir()
