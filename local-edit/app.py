@@ -14,6 +14,7 @@
 import os
 import time
 import tempfile
+import subprocess
 import requests
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
@@ -31,6 +32,8 @@ APIS = {
     "get_article":    BACKEND_HOST + "/api/article/get",
     "update_article": BACKEND_HOST + "/api/article/update",
 }
+# 编辑器命令
+EDITOR = "C:\\Program Files\\Typora\\Typora.exe"
 
 # 临时目录
 temp_dir = None
@@ -101,14 +104,28 @@ def save_article(article):
 
 def load_article(article):
     """从文件中载入文章数据
-    :param article  文章数据（dict）（已包含"filePath"键）
+    :param article  文章数据（dict，已包含"filePath"键）
     """
     with open(article["filePath"], "r", encoding="UTF-8") as file:
         article["content"] = file.read()
 
 
+def open_article_in_editor(article):
+    """在编辑器中打开文章
+    :param article  文章数据（dict，已包含"filePath"键）
+    """
+    global EDITOR
+    command = f"{EDITOR} {article['filePath']}"
+    subprocess.Popen(command)
+
+
 def on_file_modified(event):
-    print(event.src_path + " 被修改")
+    """文件修改事假处理函数
+    :param event    事件
+    """
+    load_article(article)
+    update_article(article)
+    print(event.src_path + " 被修改，已自动更新")
 
 
 def open_file_watcher():
@@ -163,8 +180,7 @@ open_file_watcher()
 
 article = get_article(17)
 save_article(article)
-load_article(article)
-update_article(article)
+open_article_in_editor(article)
 
 try:
     while True:
