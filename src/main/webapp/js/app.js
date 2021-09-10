@@ -30,6 +30,15 @@ const APP = {
             // Markdown渲染器
             markdownRenderer: window.markdownit({
                 html: true,
+                // 代码高亮
+                highlight: function (str, lang) {
+                    if (lang && window.hljs.getLanguage(lang)) {
+                        try {
+                            return window.hljs.highlight(str, { language: lang }).value;
+                        } catch (__) {}
+                    }
+                    return '';
+                }
             }),
         };
     },
