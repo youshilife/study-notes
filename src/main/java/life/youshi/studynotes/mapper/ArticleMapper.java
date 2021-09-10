@@ -4,6 +4,7 @@ import life.youshi.studynotes.entity.Article;
 import life.youshi.studynotes.util.MyBatisUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * [数据库映射器] 文章
@@ -50,6 +51,19 @@ public class ArticleMapper {
         return (List<Article>) MyBatisUtils.executeQuery(
             sqlSession ->
                 sqlSession.selectList(namespace + ".selectByParentId", parentId)
+        );
+    }
+
+    /**
+     * 根据动态参数查询文章
+     *
+     * @param params    参数表
+     * @return          文章列表
+     */
+    public List<Article> selectArticlesByParams(Map<String, Object> params) {
+        return (List<Article>) MyBatisUtils.executeQuery(
+            sqlSession ->
+                sqlSession.selectList(namespace + ".selectByParams", params)
         );
     }
 

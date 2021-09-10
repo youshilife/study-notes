@@ -4,6 +4,7 @@ import life.youshi.studynotes.entity.Article;
 import life.youshi.studynotes.mapper.ArticleMapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * [服务] 文章服务
@@ -31,6 +32,16 @@ public class ArticleService {
      */
     public Article getArticleByPath(String path) {
         return articleMapper.selectArticleByPath(path);
+    }
+
+    /**
+     * 根据动态参数获取文章
+     *
+     * @param params    参数表
+     * @return          文章实例列表
+     */
+    public List<Article> getArticlesByParams(Map<String, Object> params) {
+        return articleMapper.selectArticlesByParams(params);
     }
 
     /**

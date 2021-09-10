@@ -18,6 +18,31 @@
         SELECT * FROM articles WHERE parent_id = #{value} ORDER BY sort_code ASC, id ASC
     </select>
 
+    <!--根据动态参数查询-->
+    <select id="selectByParams" parameterType="Map" resultType="life.youshi.studynotes.entity.Article">
+        SELECT * FROM articles
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="parent_id != null">
+                AND parent_id = #{parentId}
+            </if>
+            <if test="path != null">
+                AND path = #{path}
+            </if>
+            <if test="sort_code != null">
+                AND sort_code = #{sortCode}
+            </if>
+            <if test="title != null">
+                AND title = #{title}
+            </if>
+            <if test="content != null">
+                AND content = #{content}
+            </if>
+        </where>
+    </select>
+
     <!--插入-->
     <insert id="insert" parameterType="life.youshi.studynotes.entity.Article" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         INSERT INTO articles (parent_id, path, sort_code, title, content)
