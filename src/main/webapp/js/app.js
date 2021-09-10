@@ -1,18 +1,16 @@
 'use strict';
 
 // 后端主机
-const backendHost = '//localhost:8080'
+const BACKEND_HOST = '//localhost:8080'
 // API列表
-const apis = {
-    getArticle:    backendHost + '/api/article',
-    createArticle: backendHost + '/api/article/create',
-    updateArticle: backendHost + '/api/article/update',
-    resortArticle: backendHost + '/api/article/resort',
-    moveArticle:   backendHost + '/api/article/move',
-    deleteArticle: backendHost + '/api/article/delete',
+const APIS = {
+    getArticle:    BACKEND_HOST + '/api/article/get',
+    createArticle: BACKEND_HOST + '/api/article/create',
+    updateArticle: BACKEND_HOST + '/api/article/update',
+    deleteArticle: BACKEND_HOST + '/api/article/delete',
 };
 
-let app = {
+const APP = {
     data() {
         return {
             // 当前文章
@@ -64,7 +62,7 @@ let app = {
          */
         getArticle() {
             axios
-                .get(apis.getArticle, {
+                .get(APIS.getArticle, {
                     params: {
                         path: window.location.pathname,
                     },
@@ -91,9 +89,9 @@ let app = {
 
             let params = new URLSearchParams();
             params.append('parent_id', this.article.id);
-            params.append('title', title);
+            params.append('title',     title);
             axios
-                .post(apis.createArticle, params)
+                .post(APIS.createArticle, params)
                 .then(response => {
                     if (response.data.code === 0) {
                         this.getArticle();
@@ -106,19 +104,19 @@ let app = {
         /**
          * 重新排序文章
          *
-         * @param child 要重设排序值的子文章
+         * @param article 要重设排序值的文章
          */
-        resortArticle(child) {
-            let sortCode = prompt(`文章《${child.title}》当前的排序值为${child.sortCode}，请输入新排序值：`);
+        resortArticle(article) {
+            let sortCode = prompt(`文章《${article.title}》当前的排序值为${article.sortCode}，请输入新排序值：`);
             if (sortCode === null) {
                 return;
             }
 
             let params = new URLSearchParams();
-            params.append('id', child.id);
+            params.append('id',        article.id);
             params.append('sort_code', sortCode);
             axios
-                .post(apis.resortArticle, params)
+                .post(APIS.updateArticle, params)
                 .then(response => {
                     if (response.data.code === 0) {
                         this.getArticle();
@@ -131,14 +129,14 @@ let app = {
         /**
          * 删除文章
          *
-         * @param child 要删除的子文章
+         * @param article 要删除的文章
          */
-        deleteArticle(child) {
-            if (confirm(`是否确定删除文章《${child.title}》及其所有子文章？`)) {
+        deleteArticle(article) {
+            if (confirm(`是否确定删除文章《${article.title}》及其所有子文章？`)) {
                 let params = new URLSearchParams();
-                params.append('id', child.id);
+                params.append('id', article.id);
                 axios
-                    .post(apis.deleteArticle, params)
+                    .post(APIS.deleteArticle, params)
                     .then(response => {
                         if (response.data.code === 0) {
                             this.getArticle();
@@ -168,12 +166,12 @@ let app = {
         /**
          * 更新文章内容
          */
-        updateArticle() {
+        updateArticleContent() {
             let params = new URLSearchParams();
-            params.append('id', this.article.id);
+            params.append('id',      this.article.id);
             params.append('content', this.article.content);
             axios
-                .post(apis.updateArticle, params)
+                .post(APIS.updateArticle, params)
                 .then(response => {
                     if (response.data.code === 0) {
                         this.isEditing = false;
@@ -190,5 +188,5 @@ let app = {
     },
 };
 
-let vueApp = Vue.createApp(app);
-vueApp.mount('#app');
+const VUE_APP = Vue.createApp(APP);
+VUE_APP.mount('#app');

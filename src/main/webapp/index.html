@@ -78,7 +78,7 @@
             <!--编辑文章-->
             <form id="edit" v-if="isEditing">
                 <textarea v-model="article.content"></textarea>
-                <a class="button" @click="updateArticle()">保存</a>
+                <a class="button" @click="updateArticleContent()">保存</a>
                 <a class="button" @click="cancelEditArticle()">取消</a>
             </form>
             <!--文章-->
