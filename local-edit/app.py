@@ -181,7 +181,9 @@ def close_file_watcher():
 @flask_app.route("/ping")
 def ping():
     """[Web控制器] 测试连通性"""
-    return jsonify("pong")
+    return jsonify("pong"), {
+        "Access-Control-Allow-Origin": "*"
+    }
 
 
 @flask_app.route("/edit/<id>")
@@ -204,7 +206,9 @@ def edit(id):
         result["code"] = 1
         result["message"] = "未能获取到指定文章，无法编辑！"
 
-    return result, status_code
+    return result, status_code, {
+        "Access-Control-Allow-Origin": "*"
+    }
 
 
 @atexit.register
