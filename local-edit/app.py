@@ -12,6 +12,7 @@
 
 
 import tempfile
+import requests
 
 
 # =====================================
@@ -50,9 +51,41 @@ def close_temp_dir():
         temp_dir.cleanup()
 
 
+def get_article(id):
+    """从后端获取文章数据
+    :param id       文章ID
+    :return         文章数据（dict）
+                    若获取失败，则返回None
+    """
+    article = None
+    response = requests.get(APIS["get_article"], {
+        "id": id,
+    })
+    if response.status_code == 200:
+        article = response.json()["data"]["article"]
+    return article
+
+
+def update_article(article):
+    """更新文章数据到后端
+    :param article  文章数据（dict）
+    :return         是否成功
+    """
+    response = requests.post(APIS["update_article"], {
+        "id":      article["id"],
+        "content": article["content"],
+    })
+    return response.status_code == 200
+
+
 # =====================================
 # 执行
 # =====================================
 
 open_temp_dir()
+
+article = get_article(17)
+article["content"] += "[新内容]"
+update_article(article)
+
 close_temp_dir()
