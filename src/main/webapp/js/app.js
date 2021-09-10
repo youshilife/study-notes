@@ -101,7 +101,7 @@ const APP = {
             axios
                 .post(APIS.createArticle, params)
                 .then(response => {
-                    this.getArticle();
+                    this.init();
                 })
                 .catch(error => {
                     if (error.response) {
@@ -136,7 +136,7 @@ const APP = {
             axios
                 .post(APIS.updateArticle, params)
                 .then(response => {
-                    this.getArticle();
+                    this.init();
                 })
                 .catch(error => {
                     if (error.response) {
@@ -157,7 +157,7 @@ const APP = {
                 axios
                     .post(APIS.deleteArticle, params)
                     .then(response => {
-                        this.getArticle();
+                        this.init();
                     })
                     .catch(error => {
                         if (error.response) {
@@ -201,8 +201,7 @@ const APP = {
                 .then(response => {
                     let newPath = this.article.path.replace(new RegExp(`${this.article.title}$`), this.article.titleEditing);
                     window.history.replaceState(null, null, newPath);
-                    this.getArticle();
-                    this.isEditing = false;
+                    this.init();
                 })
                 .catch(error => {
                     if (error.response) {
@@ -226,8 +225,7 @@ const APP = {
                 // 如果是文章链接，则不刷新页面，而是重新获取数据
                 if (href && href.match(/^\/(.*?\/?)*/)) {
                     window.history.pushState(null, null, href);
-                    this.cancelEditArticle();
-                    this.getArticle();
+                    this.init();
                     event.preventDefault();
                 }
             }
@@ -243,7 +241,7 @@ const APP = {
                     this.isLocalEditorAvailable = true;
                 })
                 .catch(error => {
-
+                    this.isLocalEditorAvailable = false;
                 });
         },
 
@@ -260,13 +258,21 @@ const APP = {
 
                 });
         },
+
+        /**
+         * 初始化
+         */
+        init() {
+            this.isEditing = false;
+            this.getArticle();
+            this.checkLocalEditor();
+        },
     },
 
     mounted() {
-        this.getArticle();
-        this.checkLocalEditor();
+        this.init();
         window.addEventListener('popstate', () => {
-            this.getArticle();
+            this.init();
         });
     },
 };
