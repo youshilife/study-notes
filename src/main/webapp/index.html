@@ -9,82 +9,84 @@
 </head>
 <body>
     <div id="app">
-        <!--侧边栏-->
-        <aside id="sidebar" :class="{shown: isSidebarShown}">
-            <!--应用名称-->
-            <p class="app-name">学习笔记</p>
-            <!--隐藏侧边栏按钮-->
-            <button id="button-hide-sidebar" class="button-sidebar-control" @click="hideSidebar()">
-                <span class="fa fa-times"></span>
-            </button>
-            <!--笔记本名称-->
-            <h2 class="book-name">{{ article.title }}</h2>
-            <!--位置指示-->
-            <nav class="position">
-                <ul>
-                    <li v-if="article.path !== '/'">
-                        当前文章：<a :href="article.path">{{ article.path }}</a>
-                    </li>
-                    <li v-if="parent">
-                        上级文章：<a :href="parent.path">{{ parent.path }}</a>
-                    </li>
-                </ul>
-            </nav>
-            <!--子文章导航-->
-            <nav class="articles">
-                <ul>
-                    <li v-for="child in children">
-                        <a :href="child.path">{{ child.title }}</a>
+        <div @click="linkClicked($event)">
+            <!--侧边栏-->
+            <aside id="sidebar" :class="{shown: isSidebarShown}">
+                <!--应用名称-->
+                <p class="app-name">学习笔记</p>
+                <!--隐藏侧边栏按钮-->
+                <button id="button-hide-sidebar" class="button-sidebar-control" @click="hideSidebar()">
+                    <span class="fa fa-times"></span>
+                </button>
+                <!--笔记本名称-->
+                <h2 class="book-name">{{ article.title }}</h2>
+                <!--位置指示-->
+                <nav class="position">
+                    <ul>
+                        <li v-if="article.path !== '/'">
+                            当前文章：<a :href="article.path">{{ article.path }}</a>
+                        </li>
+                        <li v-if="parent">
+                            上级文章：<a :href="parent.path">{{ parent.path }}</a>
+                        </li>
+                    </ul>
+                </nav>
+                <!--子文章导航-->
+                <nav class="articles">
+                    <ul>
+                        <li v-for="child in children">
+                            <a :href="child.path">{{ child.title }}</a>
 
-                        <div class="operation">
-                            <span class="sort-code" title="排序值">{{ child.sortCode }}</span>
-                            <a title="修改排序值" @click="resortArticle(child)">
-                                <span class="fa fa-sort-amount-up"></span>
-                            </a>
-                            <a title="移动文章到指定分类">
-                                <span class="fa fa-sign-out-alt"></span>
-                            </a>
-                            <a title="删除文章" @click="deleteArticle(child)">
-                                <span class="fa fa-trash"></span>
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-            <!--操作-->
-            <div class="operation">
-                <a class="create-article" title="创建新文章" @click="createArticle()">
-                    <span class="fa fa-plus"></span>
-                </a>
-            </div>
-        </aside>
-
-        <!--主要内容-->
-        <main id="main">
-            <!--头部-->
-            <header>
-                <!--文章标题-->
-                <h1 class="title">{{ article.title }}</h1>
+                            <div class="operation">
+                                <span class="sort-code" title="排序值">{{ child.sortCode }}</span>
+                                <a title="修改排序值" @click="resortArticle(child)">
+                                    <span class="fa fa-sort-amount-up"></span>
+                                </a>
+                                <a title="移动文章到指定分类">
+                                    <span class="fa fa-sign-out-alt"></span>
+                                </a>
+                                <a title="删除文章" @click="deleteArticle(child)">
+                                    <span class="fa fa-trash"></span>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!--操作-->
                 <div class="operation">
-                    <a title="编辑文章" @click="editArticle()">
-                        <span class="fa fa-edit"></span>
+                    <a class="create-article" title="创建新文章" @click="createArticle()">
+                        <span class="fa fa-plus"></span>
                     </a>
                 </div>
-                <!--显示侧边栏按钮-->
-                <button id="button-show-sidebar" class="button-sidebar-control" @click="showSidebar()">
-                    <span class="fa fa-bars"></span>
-                </button>
-            </header>
-            <!--编辑文章-->
-            <form id="edit" v-if="isEditing">
-                <textarea v-model="article.content"></textarea>
-                <a class="button" @click="updateArticleContent()">保存</a>
-                <a class="button" @click="cancelEditArticle()">取消</a>
-            </form>
-            <!--文章-->
-            <article v-if="!isEditing" v-html="renderMarkdown(article.content)">
-            </article>
-        </main>
+            </aside>
+
+            <!--主要内容-->
+            <main id="main">
+                <!--头部-->
+                <header>
+                    <!--文章标题-->
+                    <h1 class="title">{{ article.title }}</h1>
+                    <div class="operation">
+                        <a title="编辑文章" @click="editArticle()">
+                            <span class="fa fa-edit"></span>
+                        </a>
+                    </div>
+                    <!--显示侧边栏按钮-->
+                    <button id="button-show-sidebar" class="button-sidebar-control" @click="showSidebar()">
+                        <span class="fa fa-bars"></span>
+                    </button>
+                </header>
+                <!--编辑文章-->
+                <form id="edit" v-if="isEditing">
+                    <textarea v-model="article.content"></textarea>
+                    <a class="button" @click="updateArticleContent()">保存</a>
+                    <a class="button" @click="cancelEditArticle()">取消</a>
+                </form>
+                <!--文章-->
+                <article v-if="!isEditing" v-html="renderMarkdown(article.content)">
+                </article>
+            </main>
+        </div>
     </div>
 
     <script src="https://unpkg.com/vue@next"></script>

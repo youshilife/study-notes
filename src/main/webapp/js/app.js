@@ -200,6 +200,23 @@ const APP = {
                     }
                 });
         },
+
+        /**
+         * 处理链接被点击事件
+         *
+         * @param event 点击事件
+         */
+        linkClicked(event) {
+            if (event.target.nodeName.toLowerCase() === 'a') {
+                let href = event.target.getAttribute('href');
+                // 如果是文章链接，则不刷新页面，而是重新获取数据
+                if (href.match(/^\/(.*?\/?)*/)) {
+                    window.history.pushState(null, null, href);
+                    this.getArticle();
+                    event.preventDefault();
+                }
+            }
+        },
     },
 
     mounted() {
