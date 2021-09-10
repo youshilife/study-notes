@@ -68,12 +68,13 @@ const APP = {
                     },
                 })
                 .then(response => {
-                    if (response.data.code === 0) {
-                        this.article = response.data.data.article;
-                        this.parent = response.data.data.parent;
-                        this.children = response.data.data.children;
-                    } else {
-                        alert(response.data.message);
+                    this.article = response.data.data.article;
+                    this.parent = response.data.data.parent;
+                    this.children = response.data.data.children;
+                })
+                .catch(error => {
+                    if (error.response) {
+                        alert(error.response.data.message);
                     }
                 });
         },
@@ -123,10 +124,11 @@ const APP = {
             axios
                 .post(APIS.updateArticle, params)
                 .then(response => {
-                    if (response.data.code === 0) {
-                        this.getArticle();
-                    } else {
-                        alert(response.data.message);
+                    this.getArticle();
+                })
+                .catch(error => {
+                    if (error.response) {
+                        alert(error.response.data.message);
                     }
                 });
         },
@@ -143,10 +145,11 @@ const APP = {
                 axios
                     .post(APIS.deleteArticle, params)
                     .then(response => {
-                        if (response.data.code === 0) {
-                            this.getArticle();
-                        } else {
-                            alert(response.data.message);
+                        this.getArticle();
+                    })
+                    .catch(error => {
+                        if (error.response) {
+                            alert(error.response.data.message);
                         }
                     });
             }
@@ -178,11 +181,12 @@ const APP = {
             axios
                 .post(APIS.updateArticle, params)
                 .then(response => {
-                    if (response.data.code === 0) {
-                        this.isEditing = false;
-                        this.getArticle();
-                    } else {
-                        alert(response.data.message);
+                    this.isEditing = false;
+                    this.getArticle();
+                })
+                .catch(error => {
+                    if (error.response) {
+                        alert(error.response.data.message);
                     }
                 });
         },
