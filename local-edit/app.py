@@ -12,8 +12,11 @@
 
 
 import os
+import time
 import tempfile
 import requests
+from watchdog.observers import Observer
+from watchdog.events import PatternMatchingEventHandler
 
 
 # =====================================
@@ -31,6 +34,8 @@ APIS = {
 
 # 临时目录
 temp_dir = None
+# 文件监视器
+file_watcher = None
 
 
 # =====================================
@@ -88,7 +93,7 @@ def save_article(article):
     dir_path = temp_dir.name + os.sep + str(article["id"])
     file_path = dir_path + os.sep + article["title"] + ".md"
     os.mkdir(dir_path)
-    with open(file_path, "w") as file:
+    with open(file_path, "w", encoding="UTF-8") as file:
         file.write(article["content"])
     article["filePath"] = file_path
     print(f"文章《{article['title']}》(ID: {article['id']})已保存到 {file_path}")
@@ -98,8 +103,54 @@ def load_article(article):
     """从文件中载入文章数据
     :param article  文章数据（dict）（已包含"filePath"键）
     """
-    with open(article["filePath"], "r") as file:
+    with open(article["filePath"], "r", encoding="UTF-8") as file:
         article["content"] = file.read()
+
+
+def on_file_modified(event):
+    print(event.src_path + " 被修改")
+
+
+def open_file_watcher():
+    """开启文件监视器"""
+    global temp_dir
+    global file_watcher
+    # 监听的文件路径模式
+    watch_patterns = ["*.md"]
+    # 忽略的文件路径模式
+    ignore_patterns = [
+        # Typora临时文件
+        "*.~*",
+    ]
+    # 是否忽略目录
+    ignore_directories = True
+    # 是否区分大小写
+    case_sensitive = True
+    # 事件处理器
+    event_handler = PatternMatchingEventHandler(
+        watch_patterns, ignore_patterns, ignore_directories, case_sensitive
+    )
+    # 绑定文件修改处理函数
+    event_handler.on_modified = on_file_modified
+
+    # 监控路径
+    watch_path = temp_dir.name
+    # 是否递归监控子目录
+    recursive = True
+    # 创建观察者
+    file_watcher = Observer()
+    # 设置监控计划
+    file_watcher.schedule(event_handler, watch_path, recursive=recursive)
+
+    # 开始监控
+    file_watcher.start()
+
+
+def close_file_watcher():
+    """关闭文件监视器"""
+    global file_watcher
+    file_watcher.stop()
+    file_watcher.join()
 
 
 # =====================================
@@ -108,10 +159,18 @@ def load_article(article):
 
 
 open_temp_dir()
+open_file_watcher()
 
 article = get_article(17)
 save_article(article)
 load_article(article)
 update_article(article)
 
+try:
+    while True:
+        time.sleep(1)
+except KeyboardInterrupt:
+    pass
+
+close_file_watcher()
 close_temp_dir()
