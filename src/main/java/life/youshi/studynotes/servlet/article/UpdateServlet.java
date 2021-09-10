@@ -1,35 +1,50 @@
 package life.youshi.studynotes.servlet.article;
 
 import life.youshi.studynotes.entity.Article;
-import life.youshi.studynotes.service.ArticleService;
 import life.youshi.studynotes.util.JsonResponseUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * [Servlet] 更新文章内容
+ * [Servlet] 更新文章
  */
 @WebServlet("/api/article/update")
-public class UpdateServlet extends HttpServlet {
-    private final ArticleService articleService = new ArticleService();
-
+public class UpdateServlet extends ArticleServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Integer id = Integer.parseInt(request.getParameter("id"));
-        String content = request.getParameter("content");
+        handle(response, () -> {
+            Article article = checkId(request, "id");
+            boolean hasData = false;
+            if (request.getParameter("sort_code") != null) {
+                Integer sortCode = checkInteger(request, "sort_code");
+                article.setSortCode(sortCode);
+                hasData = true;
+            }
+            if (request.getParameter("title") != null) {
+                String title = checkTitle(request, "title", article.getParentId(), article.getId());
+                article.setPath(article.getPath().replaceFirst(article.getTitle() + "$", title));
+                article.setTitle(title);
+                hasData = true;
+            }
+            if (request.getParameter("content") != null) {
+                String content = checkContent(request, "content");
+                article.setContent(content);
+                hasData = true;
+            }
 
-        Article article = articleService.getArticleById(id);
-        article.setContent(content);
+            if (! hasData) {
+                throw new BadRequestException();
+            }
 
-        articleService.updateArticle(article);
+            articleService.updateArticle(article);
+            article = articleService.getArticleById(article.getId());
 
-        JsonResponseUtils result = new JsonResponseUtils();
-
-        response.getWriter().println(result.toJson());
+            return new JsonResponseUtils()
+                .putData("article", article);
+        });
     }
 }
