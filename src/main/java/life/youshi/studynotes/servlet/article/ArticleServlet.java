@@ -243,6 +243,9 @@ public abstract class ArticleServlet extends HttpServlet {
         } catch (NotFoundException e) {
             response.setStatus(404);
             result = new JsonResponseUtils(404, "资源不存在！");
+        } catch (TitleConflictException e) {
+            response.setStatus(406);
+            result = new JsonResponseUtils(404, "标题冲突！");
         } catch (Exception e) {
             response.setStatus(500);
             result = new JsonResponseUtils(500, "服务器错误！");

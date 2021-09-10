@@ -86,7 +86,7 @@ public class ArticleService {
      * @return              排序值
      *                      使用此排序值可使得文章排在最后
      */
-    public int getNextSortCode(Article parentArticle) {
+    public Integer getNextSortCode(Article parentArticle) {
         int sortCode = 0;
         List<Article> children = getChildArticles(parentArticle);
         if (children != null && children.size() > 0) {
